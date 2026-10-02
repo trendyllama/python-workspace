@@ -3,5 +3,6 @@ __pycache__
 node_modules
 src/codecademy_dsa_python.egg-info
 .data/
+src/tutorial_app/dist/
 
 *.egg-info
