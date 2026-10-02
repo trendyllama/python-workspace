@@ -1,7 +1,7 @@
 
 FROM docker.io/python:alpine
 
-RUN apk update && apk add uv git nodejs npm ripgrep
+RUN apk update && apk add uv git nodejs npm ripgrep openssh-client
 
 WORKDIR /app
 
