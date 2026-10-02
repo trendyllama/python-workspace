@@ -8,4 +8,4 @@ WORKDIR /app
 COPY pyproject.toml uv.lock README.md ./
 COPY src ./src
 
-RUN uv sync --locked
+RUN uv sync --locked && uv build

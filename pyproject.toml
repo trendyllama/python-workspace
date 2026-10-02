@@ -82,7 +82,8 @@ extend-select = [
    "FURB",
    "RUF",
    'PT',
-   'T10'
+   'T10',
+   "TCH"
 
 
 ]
@@ -90,10 +91,6 @@ extend-select = [
 extend-ignore = [
     "E501",  # Line too long
 ]
-
-
-[tool.pyright]
-typeCheckingMode = "standard"
 
 [tool.pytest.ini_options]
 addopts = "-s --doctest-modules"
