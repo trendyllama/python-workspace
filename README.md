@@ -37,3 +37,21 @@ uv build
 The resulting wheel includes the React build under `tutorial_app/dist`, the
 configuration files under `tutorial_app/api/config`, and serves the frontend
 from FastAPI at `/`.
+
+
+# Container
+
+## Run interactively
+```sh
+docker run --name my-python-container --detach --rm python-test tail -f /dev/null
+docker exec --tty --interactive my-python-container sh
+```
+
+When you are done, exit the container and stop it with:
+
+```sh
+docker stop my-python-container
+```
+
+## Development
+
