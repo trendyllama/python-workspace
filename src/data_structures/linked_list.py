@@ -27,8 +27,6 @@ class LinkedList[T]:
         """
         self.head_node = head_node
 
-
-
     @property
     def is_empty(self) -> bool:
         """
