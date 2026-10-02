@@ -1,8 +1,12 @@
 """
-test_strategy.py is a test file for testing the strategy pattern.
-"""
+Tests and examples for the strategy pattern.
 
-import random
+Strategy allows you to replace one algorithm with another without
+changing the context. Unlike the template method pattern, which defines
+the steps of an algorithm, the strategy pattern defines the algorithm itself.
+
+Examples:
+"""
 
 import pytest
 
@@ -15,23 +19,30 @@ from src.design_patterns.strategy import (
 
 
 @pytest.mark.parametrize(
-    ("strategy", "expected"),
+    "strategy",
     [
-        (BubbleSortStrategy(), [1, 2, 3]),
-        (QuickSortStrategy(), [1, 2, 3]),
-        (DefaultSortStrategy(), [1, 2, 3]),
+        BubbleSortStrategy(),
+        QuickSortStrategy(),
+        DefaultSortStrategy(),
     ],
 )
-def test_sort_strategy_with_parametrize(strategy, expected):
+@pytest.mark.parametrize(
+    ("dataset", "expected"),
+    [
+        ([3, 1, 2], [1, 2, 3]),
+        ([5, 4, 3, 2, 1], [1, 2, 3, 4, 5]),
+        ([1, 2, 3, 4, 5], [1, 2, 3, 4, 5]),
+        ([1, 3, 2, 5, 4], [1, 2, 3, 4, 5]),
+    ],
+)
+def test_sort_strategy_with_parametrize(strategy, dataset, expected):
     """
     Test the strategy pattern. By changing the strategy of the context object,
     we can change the sorting algorithm
 
     this makes the code more flexible and allows us to change
     the sorting algorithm in the future"""
-    rand_list = [random.randint(0, 100) for _ in range(10)]
-
     context = Context(strategy)
 
-    assert context.execute([3, 2, 1]) == expected
-    assert context.execute(rand_list) == sorted(rand_list)
+    assert strategy.sort(dataset) == expected
+    assert context.execute(dataset) == expected

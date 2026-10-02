@@ -1,25 +1,3 @@
-"""
-you may have objects that change things in your application and
-you want to notify other objects about these changes
-
-
-Examples:
->>> observer = AppObserver("Observer1")
->>> user1 = AppUser("User1")
->>> user2 = AppUser("User2")
->>> observer.subscribe(user1)
->>> observer.subscribe(user2)
->>> message = Message("Hello, Users!")
->>> observer.notify(message)
-Hello, Users!
-Hello, Users!
->>> user1.receive_notification(message)
-Hello, Users!
->>> user2.receive_notification(message)
-Hello, Users!
-
-"""
-
 import logging
 import sys
 from typing import Protocol

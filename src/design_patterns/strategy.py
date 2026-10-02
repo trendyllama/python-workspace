@@ -1,15 +1,3 @@
-"""
-
-Strategy allows you to replace one algorithm with another without
-changing the context.
-
-this is very similar to the template method pattern, but the
-difference is that the
-template method pattern is used to define the steps of an algorithm,
-while the strategy pattern
-is used to define the algorithm itself.
-"""
-
 from collections.abc import Callable
 from typing import Any, Protocol
 
@@ -20,21 +8,6 @@ class SortStrategy(Protocol):
 
 class BubbleSortStrategy(SortStrategy):
     def sort(self, dataset: list) -> list:
-        """
-
-        Examples:
-        >>> strategy = BubbleSortStrategy()
-        >>> strategy.sort([3, 1, 2])
-        [1, 2, 3]
-
-        >>> strategy.sort([5, 4, 3, 2, 1])
-        [1, 2, 3, 4, 5]
-        >>> strategy.sort([1, 2, 3, 4, 5])
-        [1, 2, 3, 4, 5]
-        >>> strategy.sort([1, 3, 2, 5, 4])
-        [1, 2, 3, 4, 5]
-
-        """
         dataset = dataset.copy()
 
         n = len(dataset)
@@ -49,18 +22,6 @@ class BubbleSortStrategy(SortStrategy):
 
 class QuickSortStrategy(SortStrategy):
     def sort(self, dataset):
-        """
-        Examples:
-        >>> strategy = QuickSortStrategy()
-        >>> strategy.sort([3, 1, 2])
-        [1, 2, 3]
-        >>> strategy.sort([5, 4, 3, 2, 1])
-        [1, 2, 3, 4, 5]
-        >>> strategy.sort([1, 2, 3, 4, 5])
-        [1, 2, 3, 4, 5]
-        >>> strategy.sort([1, 3, 2, 5, 4])
-        [1, 2, 3, 4, 5]
-        """
         dataset = dataset.copy()
 
         if len(dataset) <= 1:
@@ -82,18 +43,6 @@ class QuickSortStrategy(SortStrategy):
 
 class DefaultSortStrategy(SortStrategy):
     def sort(self, dataset: list) -> list:
-        """
-        Examples:
-        >>> strategy = DefaultSortStrategy()
-        >>> strategy.sort([3, 1, 2])
-        [1, 2, 3]
-        >>> strategy.sort([5, 4, 3, 2, 1])
-        [1, 2, 3, 4, 5]
-        >>> strategy.sort([1, 2, 3, 4, 5])
-        [1, 2, 3, 4, 5]
-        >>> strategy.sort([1, 3, 2, 5, 4])
-        [1, 2, 3, 4, 5]
-        """
         return sorted(dataset)
 
 
@@ -105,13 +54,6 @@ class Context:
         self.strategy = strategy
 
     def execute(self, dataset: list) -> list:
-        """
-
-        Example:
-        >>> context = Context(BubbleSortStrategy())
-        >>> context.execute([3, 1, 2])
-        [1, 2, 3]
-        """
         return self.strategy.sort(dataset)
 
 
