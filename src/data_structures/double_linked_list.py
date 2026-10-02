@@ -7,16 +7,8 @@ class DoublyLinkedList[T]:
     """
 
     def __init__(self) -> None:
-        self._head_node = None
-        self._tail_node = None
-
-    @property
-    def head(self) -> Node[T] | None:
-        return self._head_node
-
-    @property
-    def tail(self) -> Node[T] | None:
-        return self._tail_node
+        self.head = None
+        self.tail = None
 
     def add_to_head(self, new_value: T) -> None:
         new_head = Node(new_value)

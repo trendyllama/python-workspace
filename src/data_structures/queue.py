@@ -33,70 +33,10 @@ class Queue[T]:
         3
 
         """
-        self._head: Node[T] | None = None
-        self._tail: Node[T] | None = None
-        self._size: int = 0
+        self.head: Node[T] | None = None
+        self.tail: Node[T] | None = None
+        self.size: int = 0
         self._iter_node: Node[T] | None = None
-
-    @property
-    def head(self) -> Node[T] | None:
-        """
-        - returns the head of the queue
-        - the head is the first node in the queue
-
-        Examples:
-        >>> queue = Queue()
-        >>> queue.enqueue(1)
-        >>> queue.enqueue(2)
-        >>> queue.enqueue(3)
-        >>> queue.head.value
-        1
-        """
-
-        return self._head
-
-    @head.setter
-    def head(self, new_head: Node[T] | None) -> None:
-        self._head = new_head
-
-    @property
-    def tail(self) -> Node[T] | None:
-        """
-        - returns the tail of the queue
-        - the tail is the last node in the queue
-
-        Examples:
-        >>> queue = Queue()
-        >>> queue.enqueue(1)
-        >>> queue.enqueue(2)
-        >>> queue.enqueue(3)
-        >>> queue.tail.value
-        3
-        """
-        return self._tail
-
-    @tail.setter
-    def tail(self, new_tail: Node[T] | None) -> None:
-        self._tail = new_tail
-
-    @property
-    def size(self) -> int:
-        """
-        - returns the size of the queue
-
-        Examples:
-        >>> queue = Queue()
-        >>> queue.size
-        0
-        >>> queue.enqueue(1)
-        >>> queue.size
-        1
-        """
-        return self._size
-
-    @size.setter
-    def size(self, new_size: int) -> None:
-        self._size = new_size
 
     @property
     def is_empty(self) -> bool:

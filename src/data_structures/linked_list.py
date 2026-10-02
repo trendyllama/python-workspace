@@ -25,25 +25,9 @@ class LinkedList[T]:
         >>> linked_list.head_node.value
         1
         """
-        self._head_node = head_node
+        self.head_node = head_node
 
-    @property
-    def head_node(self) -> Node | None:
-        """
-        - returns the head node of the linked list
 
-        Examples:
-        >>> linked_list = LinkedList()
-        >>> linked_list.head_node
-        >>> linked_list.head_node = Node(1)
-        >>> linked_list.head_node.value
-        1
-        """
-        return self._head_node
-
-    @head_node.setter
-    def head_node(self, new_head_node: Node | None) -> None:
-        self._head_node = new_head_node
 
     @property
     def is_empty(self) -> bool:

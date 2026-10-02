@@ -62,18 +62,27 @@ Insert 25
 
 import logging
 import random
+from typing import Any, Protocol
+
+
+class IsOrdered(Protocol):
+    def __lt__(self, other: Any, /) -> bool: ...
+    def __eq__(self, other: object, /) -> bool: ...
+    def __ge__(self, other: Any, /) -> bool: ...
+    def __gt__(self, other: Any, /) -> bool: ...
+
 
 logger = logging.getLogger(__name__)
 
 
-class BinarySearchTree:
-    def __init__(self, value, depth=1):
+class BinarySearchTree[T: IsOrdered]:
+    def __init__(self, value: T, depth: int = 1):
         self.value = value
         self.depth = depth
         self.left = None
         self.right = None
 
-    def insert(self, value):
+    def insert(self, value: T):
         if value < self.value:
             if self.left is None:
                 self.left = BinarySearchTree(value, self.depth + 1)
@@ -98,7 +107,7 @@ class BinarySearchTree:
                 case _:
                     self.right.insert(value)
 
-    def get_node_by_value(self, value):
+    def get_node_by_value(self, value: T):
         if self.value == value:
             return self
         elif (self.left is not None) and (value < self.value):
@@ -121,7 +130,7 @@ class BinarySearchTree:
 if __name__ == "__main__":
     # Example usage
     logger.info("Creating Binary Search Tree rooted at value 100:")
-    tree = BinarySearchTree(100)
+    tree = BinarySearchTree[int](100)
 
     for _x in range(10):
         tree.insert(random.randint(0, 100))

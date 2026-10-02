@@ -34,84 +34,10 @@ class Stack[T]:
         >>> stack.head.next_node.next_node.value
         1
         """
-        self._size: int = 0
-        self._head: Node[T] | None = None
-        self._limit: int = 1000
+        self.size: int = 0
+        self.head: Node[T] | None = None
+        self.limit: int = 1000
         self._iter_node: Node[T] | None = None
-
-    @property
-    def size(self) -> int:
-        """
-        - returns the size of the stack
-
-        Examples:
-        >>> stack = Stack()
-        >>> stack.size
-        0
-        >>> stack.push(1)
-        >>> stack.push(2)
-        >>> stack.push(3)
-        >>> stack.size
-        3
-        >>> stack.pop()
-        >>> stack.size
-        2
-        """
-        return self._size
-
-    @size.setter
-    def size(self, new_size: int) -> None:
-
-        if new_size < 0:
-            msg = "Size cannot be negative"
-            raise ValueError(msg)
-
-        self._size = new_size
-
-    @property
-    def head(self) -> Node[T] | None:
-        """
-        - returns the head node of the stack
-        - the head node is the top of the stack
-
-        Examples:
-        >>> stack = Stack()
-        >>> stack.head
-        >>> stack.push(1)
-        >>> stack.push(2)
-        >>> stack.push(3)
-        >>> stack.head.value
-        3
-        """
-        return self._head
-
-    @head.setter
-    def head(self, new_top_item: Node[T] | None) -> None:
-        self._head = new_top_item
-
-    @property
-    def limit(self) -> int:
-        """
-        - returns the limit of the stack
-        - the limit is the maximum size of the stack
-
-        Examples:
-        >>> stack = Stack()
-        >>> stack.limit
-        1000
-        >>> for i in range(1000):
-        ...     stack.push(i)
-        >>> stack.limit
-        1000
-        >>> stack.push(1001)
-        Traceback (most recent call last):
-        src.data_structures.exceptions.StackOverflowError
-        """
-        return self._limit
-
-    @limit.setter
-    def limit(self, new_limit: int) -> None:
-        self._limit = new_limit
 
     def _increase_size(self) -> None:
         self.size += 1

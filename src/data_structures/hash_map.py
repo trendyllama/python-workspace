@@ -17,8 +17,8 @@ class HashMap[U: Hashable, V]:
     """
 
     def __init__(self, size: int) -> None:
-        logger.debug("Initializing HashMap with size %s", size)
         self._array_size = size
+        self._array = [LinkedList() for _ in range(size)]
 
     @property
     def array_size(self) -> int:
@@ -27,7 +27,7 @@ class HashMap[U: Hashable, V]:
 
     @property
     def array(self) -> list:
-        return [LinkedList() for _ in range(self.array_size)]
+        return self._array
 
     def hash(self, key: U) -> int:
         hash_code = hash(key)
@@ -50,9 +50,9 @@ class HashMap[U: Hashable, V]:
         list_at_array.insert(payload)
 
     def retrieve(self, key: U) -> V | None:
-        hash_code = self.hash(key)
+        hash_code: int = self.hash(key)
         logger.debug("Hash code for key %s: %s", key, hash_code)
-        array_index = self.compress(hash_code)
+        array_index: int = self.compress(hash_code)
         logger.debug("Array index for key %s: %s", key, array_index)
         list_at_index = self.array[array_index]
 
