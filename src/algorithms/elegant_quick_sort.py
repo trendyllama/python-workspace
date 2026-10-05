@@ -1,4 +1,7 @@
-def quick_sort(list_input: list) -> list:
+from .types import Ordered
+
+
+def quick_sort[T: Ordered](list_input: list[T]) -> list[T]:
     """
     - most elegant implementation of quicksort
 
@@ -23,7 +26,7 @@ def quick_sort(list_input: list) -> list:
 
     pivot = list_input[-1]
 
-    smaller = list(filter(lambda x: x <= pivot, list_input[:-1]))
-    larger = list(filter(lambda x: x > pivot, list_input[:-1]))
+    smaller: list[T] = list(filter(lambda x: not pivot < x, list_input[:-1]))
+    larger: list[T] = list(filter(lambda x: pivot < x, list_input[:-1]))
 
     return [*quick_sort(smaller), pivot, *quick_sort(larger)]

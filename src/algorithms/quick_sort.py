@@ -1,12 +1,14 @@
 from random import randrange
 from typing import Protocol
 
+from .types import Ordered
+
 
 class IQuickSort(Protocol):
     def sort(self): ...
 
 
-def quicksort(list_input: list, start: int, end: int) -> None:
+def quicksort[T: Ordered](list_input: list[T], start: int, end: int) -> None:
     """
     - inelegant implementation of quicksort
 

@@ -1,4 +1,7 @@
-def swap(arr: list, index_1: int, index_2: int) -> list:
+from .types import Ordered
+
+
+def swap[T](arr: list[T], index_1: int, index_2: int) -> list[T]:
     """
     Examples:
     >>> swap([1, 2, 3], 0, 1)
@@ -15,7 +18,7 @@ def swap(arr: list, index_1: int, index_2: int) -> list:
     return arr
 
 
-def bubble_sort(arr: list) -> list:
+def bubble_sort[T: Ordered](arr: list[T]) -> list[T]:
     """
     Examples:
     >>> bubble_sort([1, 2, 3])
@@ -28,7 +31,7 @@ def bubble_sort(arr: list) -> list:
     """
     for idx1, _ in enumerate(arr):
         for idx2 in range(len(arr) - idx1 - 1):
-            if arr[idx2] > arr[idx2 + 1]:
+            if arr[idx2 + 1] < arr[idx2]:
                 swap(arr, idx2, idx2 + 1)
 
     return arr
