@@ -74,7 +74,6 @@ extend-select = [
     "ISC",
     "ICN",
     "PIE",
-    "T20",
     "PYI",
     "PTH",
     "PERF",
@@ -96,3 +95,7 @@ extend-ignore = [
 addopts = "-s --doctest-modules"
 asyncio_mode = "auto"
 testpaths = ["tests"]
+
+
+[project.scripts]
+towers_of_hanoi = "towers_of_hanoi.towers_of_hanoi:main"
