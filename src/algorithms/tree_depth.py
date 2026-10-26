@@ -23,9 +23,9 @@ def breadth_first_search[T](
         if current_node == value:
             return current_node
 
-        if current_node.left_child:
+        if current_node.left_child is not None:
             queue.append(current_node.left_child)
-        if current_node.right_child:
+        if current_node.right_child is not None:
             queue.append(current_node.right_child)
 
     return None
@@ -40,8 +40,22 @@ def depth_first_search[T](
 
     """
 
-    msg = "This function is not implemented yet."
-    raise NotImplementedError(msg)
+    if tree_node is None:
+        return None
+
+    if tree_node.value == value:
+        return tree_node
+
+    left_result = depth_first_search(tree_node.left_child, value)
+    if left_result is not None:
+        return left_result
+
+    right_result = depth_first_search(tree_node.right_child, value)
+    if right_result is not None:
+        return right_result
+
+    return None
+
 
 
 def build_bst[T](my_list: list[T]) -> TreeNode[T] | None:

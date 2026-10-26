@@ -1,14 +1,13 @@
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Annotated
+from typing import TYPE_CHECKING, Annotated
 
+import sqlalchemy as sa
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
-
-import sqlalchemy as sa
 
 from .configuration import load_seed_recipes
 from .db import (
@@ -20,6 +19,11 @@ from .db import (
     create_session_factory,
     initialize_database,
 )
+
+if TYPE_CHECKING:
+    from sqlalchemy.engine.result import Result
+    from sqlalchemy.ext.asyncio.engine import AsyncEngine
+    from sqlalchemy.ext.asyncio.session import async_sessionmaker
 
 
 class RecipeSummary(BaseModel):
@@ -41,13 +45,13 @@ async def list_recipes(session: AsyncSession) -> list[RecipeSummary]:
 
 
 async def get_recipe(session: AsyncSession, recipe_id: int) -> RecipeResponse:
-    recipe = await session.get(Recipe, recipe_id)
+    recipe: Recipe | None = await session.get(Recipe, recipe_id)
     if recipe is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Recipe not found"
         )
 
-    ingredients_result = await session.execute(
+    ingredients_result: Result[str] = await session.execute(
         sa.select(Ingredient.name)
         .where(Ingredient.recipe_id == recipe_id)
         .order_by(Ingredient.name)
@@ -67,8 +71,8 @@ async def get_recipe(session: AsyncSession, recipe_id: int) -> RecipeResponse:
 
 
 def build_app(db_path: Path) -> FastAPI:
-    engine = create_engine(db_path)
-    session_factory = create_session_factory(engine)
+    engine: AsyncEngine = create_engine(db_path)
+    session_factory: async_sessionmaker[AsyncSession] = create_session_factory(engine)
 
     @asynccontextmanager
     async def lifespan(_: FastAPI):

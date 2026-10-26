@@ -55,3 +55,14 @@ docker stop my-python-container
 
 ## Development
 
+### TCP listener
+
+Run the newline-delimited UTF-8 TCP listener with:
+
+```sh
+uv run python -m src.random_examples.consumer --host 127.0.0.1 --port 9000
+```
+
+Each line received from a client is passed to `consume_message`; replace that
+function with the application's message-processing logic. The listener accepts
+multiple clients concurrently and can be stopped with Ctrl+C.

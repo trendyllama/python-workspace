@@ -2,8 +2,8 @@
 - contains stack class and exceptions related to the stack
 """
 
-from src.data_structures.exceptions import EmptyStackError, StackOverflowError
-from src.data_structures.node import Node
+from .exceptions import EmptyStackError, StackOverflowError
+from .node import Node
 
 
 class Stack[T]:

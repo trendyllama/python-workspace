@@ -1,14 +1,13 @@
 from collections.abc import AsyncIterator
 from pathlib import Path
 
+import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
     async_sessionmaker,
     create_async_engine,
 )
-
-import sqlalchemy as sa
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from .configuration import RecipeSeed, load_seed_recipes
@@ -57,7 +56,7 @@ def create_session_factory(engine: AsyncEngine) -> async_sessionmaker[AsyncSessi
 async def initialize_database(
     engine: AsyncEngine, seed_recipes: dict[int, RecipeSeed] | None = None
 ) -> None:
-    seed_recipes = seed_recipes or load_seed_recipes()
+    seed_recipes: dict[int, RecipeSeed] = seed_recipes or load_seed_recipes()
     async with engine.begin() as connection:
         await connection.run_sync(Base.metadata.create_all)
 

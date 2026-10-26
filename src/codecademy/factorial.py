@@ -3,17 +3,6 @@ from functools import lru_cache
 
 @lru_cache
 def fact(n: int) -> int:
-    """
-    Example:
-    >>> fact(5)
-    120
-    >>> fact(3)
-    6
-    >>> fact(0)
-    1
-    >>> fact(10)
-    3628800
-    """
     if n < 0:
         msg = "Factorial is not defined for negative numbers"
         raise ValueError(msg)
@@ -26,17 +15,6 @@ def fact(n: int) -> int:
 
 @lru_cache
 def fact_itr(n: int) -> int:
-    """
-    Example:
-    >>> fact_itr(5)
-    120
-    >>> fact_itr(3)
-    6
-    >>> fact_itr(0)
-    1
-    >>> fact_itr(10)
-    3628800
-    """
     if n < 0:
         msg = "Factorial is not defined for negative numbers"
         raise ValueError(msg)

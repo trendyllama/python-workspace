@@ -1,5 +1,5 @@
 import asyncio
-import datetime
+import datetime as dt
 from typing import Any, Protocol
 
 
@@ -26,7 +26,7 @@ class Config[Index: int](Publisher):
             return (
                 self._data.copy(),
                 self._diffs.copy(),
-                datetime.datetime.now(datetime.UTC),
+                dt.datetime.now(dt.UTC),
             )
 
     async def get(self, key: str):

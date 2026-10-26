@@ -1,37 +1,55 @@
 import logging
+from abc import abstractmethod
+from decimal import Decimal
+from enum import StrEnum
+from functools import singledispatch
 from typing import Protocol
 
 logger = logging.getLogger(__name__)
 
 
-def conversion(units: str, temp: float):
-    """
-    Converts temperature between Fahrenheit and Celcius.
-    Example:
-    >>> conversion("F", 32)
-    0.0
-    >>> conversion("C", 0)
-    32.0
-    >>> conversion("F", 100)
-    37.77777777777778
-    >>> conversion("C", 100)
-    212.0
-    """
+class TempatureUnit(StrEnum):
+    CELCIUS = "C"
+    FAHRENHEIT = "F"
 
-    logger.debug("Converting %s degrees %s", temp, units)
 
-    if units == "F" or units == "Fahrenheit":
-        c = (temp - 32) * (5 / 9)
-        logger.debug("Converted to %s degrees Celsius", c)
-        return c
-    elif units == "C" or units == "Celcius":
-        f = (temp * (9 / 5)) + 32
-        logger.debug("Converted to %s degrees Fahrenheit", f)
-        return f
-    else:
-        msg = "Invalid units. Please use 'F' for Fahrenheit or 'C' for Celcius."
-        logger.error(msg)
-        raise ValueError(msg)
+type Numeric = int | float | Decimal
+
+@abstractmethod
+@singledispatch
+def conversion(temp: Numeric, units: TempatureUnit) -> float | Decimal:
+    ...
+
+@conversion.register
+def _(temp: float, units: TempatureUnit) -> float:
+    match units:
+        case TempatureUnit.FAHRENHEIT:
+            c = (temp - 32) * (5 / 9)
+            return c
+        case TempatureUnit.CELCIUS:
+            f = (temp * (9 / 5)) + 32
+            return f
+
+@conversion.register
+def _(temp: int, units: TempatureUnit) -> float:
+    match units:
+        case TempatureUnit.FAHRENHEIT:
+            c = (temp - 32) * (5 / 9)
+            return c
+        case TempatureUnit.CELCIUS:
+            f = (temp * (9 / 5)) + 32
+            return f
+
+
+@conversion.register
+def _(temp: Decimal, units: TempatureUnit) -> Decimal:
+    match units:
+        case TempatureUnit.FAHRENHEIT:
+            c = (temp - Decimal(32)) * (Decimal(5) / Decimal(9))
+            return c
+        case TempatureUnit.CELCIUS:
+            f = (temp * (Decimal(9) / Decimal(5))) + Decimal(32)
+            return f
 
 
 class TemperatureConverter(Protocol):
@@ -68,7 +86,7 @@ class CelciusToFahrenheitConverter(TemperatureConverter):
 
 
 class TemperatureConverterBuilder:
-    def __init__(self, units_to: str, units_from: str, temperature: float) -> None:
+    def __init__(self, units_to: TempatureUnit, units_from: TempatureUnit, temperature: float) -> None:
         self.units_to = units_to
         self.units_from = units_from
         self.temperature = temperature
@@ -80,10 +98,10 @@ class TemperatureConverterBuilder:
         )
 
     def build(self) -> TemperatureConverter:
-        if self.units_to == "Celcius" and self.units_from == "Fahrenheit":
+        if self.units_to == TempatureUnit.CELCIUS and self.units_from == TempatureUnit.FAHRENHEIT:
             return FahrenheitToCelciusConverter(self.temperature)
 
-        if self.units_to == "Fahrenheit" and self.units_from == "Celcius":
+        if self.units_to == TempatureUnit.FAHRENHEIT and self.units_from == TempatureUnit.CELCIUS:
             return CelciusToFahrenheitConverter(self.temperature)
 
         raise NotImplementedError

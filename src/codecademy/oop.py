@@ -16,7 +16,7 @@ class School:
     'A High school named Hill with 100 students'
     """
 
-    def __init__(self, name, level, number_of_students):
+    def __init__(self, name: str, level: str, number_of_students: int):
         self.name = name
         self.level = level
         self.number_of_students = number_of_students
@@ -37,8 +37,8 @@ class PrimarySchool(School):
     500
     """
 
-    def __init__(self, name, num_students, pickup_policy):
-        super().__init__(name, "primary", num_students)
+    def __init__(self, name: str, number_of_students: int, pickup_policy: str):
+        super().__init__(name, "primary", number_of_students)
         self.pickupPolicy = pickup_policy
 
     def get_pp(self):
@@ -65,7 +65,7 @@ class HighSchool(School):
     "We offer ['Soccer', 'Track', 'Hockey'] as extra ciricular sports"
     """
 
-    def __init__(self, name, number_of_students, sports_teams):
+    def __init__(self, name: str, number_of_students: int, sports_teams: list[str]):
         super().__init__(name, "High", number_of_students)
         self.sports_teams = sports_teams
 

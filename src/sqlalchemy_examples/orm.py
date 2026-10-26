@@ -1,19 +1,25 @@
 import logging
-
-from sqlalchemy.ext.asyncio import create_async_engine
+from typing import TYPE_CHECKING
 
 import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    from sqlalchemy.engine.base import Engine
+    from sqlalchemy.engine.row import Row
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 
-def get_engine():
+def get_engine() -> sa.Engine:
     return sa.create_engine("sqlite:///:memory:")
 
 
-def get_async_engine():
+def get_async_engine() -> AsyncEngine:
     return create_async_engine("sqlite+aiosqlite:///:memory:")
 
 
@@ -30,7 +36,7 @@ class User(Base):
 
 
 def init_db():
-    engine = get_engine()
+    engine: Engine = get_engine()
 
     with engine.begin() as conn:
         Base.metadata.create_all(conn)
@@ -44,7 +50,7 @@ def init_db():
             ],
         )
 
-        result = conn.execute(
+        result: Sequence[Row[User]] = conn.execute(
             sa.select(User).where(User.name.like("Al%")).order_by(User.id)
         ).all()
         logger.debug("Selected users with names starting with 'Al': %s", result)
@@ -54,6 +60,6 @@ def init_db():
 
         conn.execute(sa.delete(User).where(User.name == "Bob"))
 
-        result = conn.execute(sa.select(User).order_by(User.id)).all()
+        result: Sequence[Row[User]] = conn.execute(sa.select(User).order_by(User.id)).all()
         for row in result:
             logger.info("User %s: %s, %s", row.id, row.name, row.email)

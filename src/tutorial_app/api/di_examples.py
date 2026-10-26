@@ -1,7 +1,7 @@
 """Examples of integrating the service container with the recipe API."""
-
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from typing import TYPE_CHECKING
 
 from fastapi import Depends, FastAPI
 from sqlalchemy.ext.asyncio import AsyncEngine
@@ -11,12 +11,15 @@ from .db import create_engine, create_session_factory
 from .dependencies import ServiceContainer, create_fastapi_dependency
 from .main import RecipeResponse, get_recipe, list_recipes
 
+if TYPE_CHECKING:
+    from sqlalchemy.ext.asyncio.session import AsyncSession, async_sessionmaker
+
 
 class RecipeService:
     """Small service wrapper used by the dependency-injection examples."""
 
     def __init__(self, engine: AsyncEngine):
-        self.session_factory = create_session_factory(engine)
+        self.session_factory: async_sessionmaker[AsyncSession] = create_session_factory(engine)
 
     async def get_all_recipes(self):
         async with self.session_factory() as session:
