@@ -1,5 +1,7 @@
 import logging
+from dataclasses import dataclass
 from enum import IntEnum, unique
+from functools import singledispatch
 from math import e
 from typing import Protocol, runtime_checkable
 
@@ -132,6 +134,105 @@ class ContinuousCompoundInterestCalculator(CompoundInterestCalculator):
             raise ValueError
 
         return self.final_amount
+
+
+@dataclass
+class MonthlyCompoundInterestParams:
+    years: int
+    principle: float
+    monthly_investment: float
+    interest: float
+
+
+@dataclass
+class YearlyCompoundInterestParams:
+    years: int
+    principle: float
+    monthly_investment: float
+    interest: float
+
+@dataclass
+class DailyCompoundInterestParams:
+    years: int
+    principle: float
+    monthly_investment: float
+    interest: float
+
+@dataclass
+class ContinuousCompoundInterestParams:
+    years: int
+    principle: float
+    monthly_investment: float
+    interest: float
+
+
+@singledispatch
+def calculate_final_amount(params) -> float:
+    msg = f"Unsupported type: {type(params)}"
+    raise TypeError(msg)
+
+
+@calculate_final_amount.register(MonthlyCompoundInterestParams)
+def _(params: MonthlyCompoundInterestParams) -> float:
+
+    monthly_invest = params.monthly_investment * YearInterval.MONTHS.value
+    final_ammount = 0.0
+
+    for _ in range(params.years):
+        if final_ammount == 0:
+            final_ammount = params.principle
+
+        final_ammount = (final_ammount + monthly_invest) * (1 + params.interest)
+
+    return final_ammount
+
+
+@calculate_final_amount.register(YearlyCompoundInterestParams)
+def _(params: YearlyCompoundInterestParams) -> float:
+    yearly_invest = params.monthly_investment * YearInterval.MONTHS.value
+    final_ammount = 0.0
+
+    for _ in range(params.years):
+        if final_ammount == 0:
+            final_ammount = params.principle
+
+        final_ammount = (final_ammount + yearly_invest) * (1 + params.interest)
+
+    return final_ammount
+
+@calculate_final_amount.register(DailyCompoundInterestParams)
+def _(params: DailyCompoundInterestParams) -> float:
+    daily_invest = (
+        params.monthly_investment
+        * YearInterval.MONTHS.value
+        / YearInterval.DAYS.value
+    )
+    final_ammount = 0.0
+
+    for _ in range(params.years * YearInterval.DAYS.value):
+        if final_ammount == 0:
+            final_ammount = params.principle
+
+        final_ammount = (final_ammount + daily_invest) * (
+            1 + params.interest / YearInterval.DAYS.value
+        )
+
+    return final_ammount
+
+@calculate_final_amount.register(ContinuousCompoundInterestParams)
+def _(params: ContinuousCompoundInterestParams) -> float:
+    total_months = params.years * YearInterval.MONTHS.value
+    monthly_invest = params.monthly_investment
+    final_ammount = params.principle * e ** (params.interest * params.years)
+
+    for _ in range(total_months):
+        final_ammount += monthly_invest * e ** (
+            params.interest * ((params.years - 1) / YearInterval.MONTHS.value)
+        )
+
+    return final_ammount
+
+
 
 
 def main() -> None:
