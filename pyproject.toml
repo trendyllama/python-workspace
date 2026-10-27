@@ -17,6 +17,7 @@ dependencies = [
     "ruff>=0.6.8",
     "ty>=0.0.49",
     "pytest-asyncio>=1.4.0",
+    "kafka-python>=3.0.12",
 ]
 
 [build-system]
@@ -95,6 +96,11 @@ extend-ignore = [
 addopts = "-s --doctest-modules"
 asyncio_mode = "auto"
 testpaths = ["tests"]
+
+[dependency-groups]
+dev = [
+    "types-kafka-python>=3.0.11.20260818",
+]
 
 
 [project.scripts]

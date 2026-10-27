@@ -603,6 +603,15 @@ wheels = [
 ]
 
 [[package]]
+name = "kafka-python"
+version = "3.0.12"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/bb/a9/e8b96f7f71aacd94faf1db0feb9750bf557b17bd22b0595023c88c1f0eb2/kafka_python-3.0.12.tar.gz", hash = "sha256:4ccda3616b9aa5c353d74a97f2770d6cd1b950890d77ab0e8890e09a48eeed65", size = 512543, upload-time = "2026-10-26T18:45:58.883Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/41/ff/7b151e958d98cd6db252b1908f028e049744d26ec9373b1d01959e3bfb47/kafka_python-3.0.12-py3-none-any.whl", hash = "sha256:67add72052e3ad0c37ed9963ebe2b1696adc7f063c64eaf19862c21b69a64a18", size = 614268, upload-time = "2026-10-26T18:46:07.367Z" },
+]
+
+[[package]]
 name = "markdown-it-py"
 version = "4.2.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1232,6 +1241,7 @@ source = { editable = "." }
 dependencies = [
     { name = "aiosqlite" },
     { name = "fastapi", extra = ["standard"] },
+    { name = "kafka-python" },
     { name = "numpy" },
     { name = "pandas" },
     { name = "pyarrow" },
@@ -1244,10 +1254,16 @@ dependencies = [
     { name = "ty" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "types-kafka-python" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "aiosqlite", specifier = ">=0.21.0" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.120.2" },
+    { name = "kafka-python", specifier = ">=3.0.12" },
     { name = "numpy", specifier = ">=2.2.6" },
     { name = "pandas", specifier = ">=2.3.0" },
     { name = "pyarrow", specifier = ">=20.0.0" },
@@ -1259,6 +1275,9 @@ requires-dist = [
     { name = "sqlalchemy", extras = ["asyncio"], specifier = ">=2.0.43" },
     { name = "ty", specifier = ">=0.0.49" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "types-kafka-python", specifier = ">=3.0.11.20260818" }]
 
 [[package]]
 name = "pyyaml"
@@ -1660,6 +1679,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/03/51/d33db42cc72ffd8c30777547b42d01f0cbf9d95a770457698d0174b3ed71/typer-0.27.3.tar.gz", hash = "sha256:d0396f770a560ab1b0a8504e13b5f254b728cedb05c61cf0359e944e50ce8901", size = 205303, upload-time = "2026-10-06T17:24:16.61Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/07/ea/2e31b67051e91a133189e9c000c222502ddc6969856416de0d095de4c0b0/typer-0.27.3-py3-none-any.whl", hash = "sha256:e50022f28b82a86313e54501317a1db64bf8f8d036ff8cfe5ca7e47675454aff", size = 123312, upload-time = "2026-10-06T17:24:15.054Z" },
+]
+
+[[package]]
+name = "types-kafka-python"
+version = "3.0.11.20260818"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/28/f3/317a2b725b22fc4a237a32e6c8c0e4df0bd5665fa30ca185d715ec28394c/types_kafka_python-3.0.11.20260818.tar.gz", hash = "sha256:20faa04a05d7c2d8ea8be487877c89e5ef1ea1a4ac9f02c905d47d6fb8b52f62", size = 68004, upload-time = "2026-08-18T02:45:19.234Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/54/8b/26ea64bcc5c9593ed83088392368dcba9e8459fac4b892834dff52e8f256/types_kafka_python-3.0.11.20260818-py3-none-any.whl", hash = "sha256:a6cf0eb23743df392b07a1453871dafeae711dc061882a6e0afa44793b755edb", size = 137950, upload-time = "2026-08-18T02:45:18.103Z" },
 ]
 
 [[package]]
