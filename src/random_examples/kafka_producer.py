@@ -1,6 +1,7 @@
 import argparse
 import logging
 import time
+from typing import TYPE_CHECKING
 
 from kafka import KafkaProducer
 
@@ -10,6 +11,9 @@ from random_examples.kafka_config import (
     DEFAULT_TOPIC,
 )
 
+if TYPE_CHECKING:
+    from kafka.producer.future import RecordMetadata
+
 LOGGER = logging.getLogger(__name__)
 
 
@@ -18,11 +22,9 @@ def send_message(
     topic: str = DEFAULT_TOPIC,
     bootstrap_servers: str = DEFAULT_BOOTSTRAP_SERVERS,
 ) -> None:
-    producer = KafkaProducer(bootstrap_servers=bootstrap_servers)
-    try:
+
+    with KafkaProducer(bootstrap_servers=bootstrap_servers) as producer:
         _send_message(producer, message, topic)
-    finally:
-        producer.close(timeout=DEFAULT_PRODUCER_TIMEOUT_SECONDS)
 
 
 def publish_messages(
@@ -35,24 +37,25 @@ def publish_messages(
         error_message = "interval_seconds must be greater than zero"
         raise ValueError(error_message)
 
-    producer = KafkaProducer(bootstrap_servers=bootstrap_servers)
-    try:
+    with KafkaProducer(bootstrap_servers=bootstrap_servers) as producer:
         while True:
             _send_message(producer, message, topic)
             time.sleep(interval_seconds)
-    finally:
-        producer.close(timeout=DEFAULT_PRODUCER_TIMEOUT_SECONDS)
 
 
 def _send_message(producer: KafkaProducer, message: str, topic: str) -> None:
-    metadata = producer.send(topic, message.encode("utf-8")).get(
+    metadata: RecordMetadata = producer.send(topic, message.encode("utf-8")).get(
         timeout=DEFAULT_PRODUCER_TIMEOUT_SECONDS
     )
     LOGGER.info(
-        "Sent message to %s partition %s offset %s",
-        metadata.topic,
-        metadata.partition,
-        metadata.offset,
+        "Sent message",
+        extra={
+            "partition": metadata.partition,
+            "offset": metadata.offset,
+            "timestamp": metadata.timestamp,
+            "topic": metadata.topic,
+            "content": message,
+        },
     )
 
 
@@ -72,7 +75,7 @@ def main() -> None:
         default=5,
         help="Delay between repeated messages (default: 5 seconds).",
     )
-    args = parser.parse_args()
+    args: argparse.Namespace = parser.parse_args()
 
     logging.basicConfig(
         level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s"

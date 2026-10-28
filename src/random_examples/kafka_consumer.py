@@ -18,23 +18,25 @@ def consume_messages(
     bootstrap_servers: str = DEFAULT_BOOTSTRAP_SERVERS,
     group_id: str = DEFAULT_CONSUMER_GROUP_ID,
 ) -> None:
-    consumer = KafkaConsumer(
+
+    with KafkaConsumer(
         topic,
         bootstrap_servers=bootstrap_servers,
-        auto_offset_reset=DEFAULT_AUTO_OFFSET_RESET,
+        auto_offset_reset=DEFAULT_AUTO_OFFSET_RESET.value,
         group_id=group_id,
-    )
-    try:
+    ) as consumer:
         for message in consumer:
             LOGGER.info(
-                "Received from %s: %s (Partition: %d, Offset: %d)",
+                "Received from %s: %s",
                 message.topic,
                 message.value.decode("utf-8"),
-                message.partition,
-                message.offset,
+                extra={
+                    "partition": message.partition,
+                    "offset": message.offset,
+                    "timestamp": message.timestamp,
+                    "topic": message.topic,
+                }
             )
-    finally:
-        consumer.close()
 
 
 def main() -> None:
