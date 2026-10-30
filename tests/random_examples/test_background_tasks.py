@@ -1,15 +1,22 @@
 import threading
 
-from random_examples.background_tasks import BackgroundTaskManager
+from random_examples.background_tasks import BackgroundTaskManager, DeadLetterState
 
 
 def test_run_tasks_executes_queued_tasks():
     manager = BackgroundTaskManager(max_attempts=2, backoff_secs=0)
-    completed = []
-    manager.put_task(lambda: completed.append("first"))
-    manager.put_task(lambda: completed.append("second"))
+    completed: list[str] = []
+    tasks_completed = threading.Event()
 
-    manager.run_tasks()
+    def complete_second_task():
+        completed.append("second")
+        tasks_completed.set()
+
+    with manager:
+        manager.put_task(lambda: completed.append("first"))
+        manager.put_task(complete_second_task)
+
+        assert tasks_completed.wait(timeout=1)
 
     assert completed == ["first", "second"]
     assert not manager.tasks
@@ -22,16 +29,23 @@ def test_run_tasks_executes_queued_tasks():
 def test_run_tasks_retries_failed_task_until_max_attempts():
     manager = BackgroundTaskManager(max_attempts=2, backoff_secs=0)
     attempts = 0
+    max_attempts_reached = threading.Event()
 
     def failing_task():
         nonlocal attempts
         attempts += 1
+        if attempts == len(tasks) * (manager.max_attempts + 1):
+            max_attempts_reached.set()
         raise RuntimeError
 
-    manager.put_task(failing_task)
-    manager.run_tasks()
+    tasks = [failing_task, failing_task]
 
-    assert attempts == manager.max_attempts + 1
+    with manager:
+        for task in tasks:
+            manager.put_task(task)
+        assert max_attempts_reached.wait(timeout=1)
+
+    assert attempts == len(tasks) * (manager.max_attempts + 1)
     assert not manager.dead_letter
 
 
@@ -45,7 +59,7 @@ def test_close_returns_and_clears_queued_dead_letters():
     manager.put_task(pending_task)
     manager.dead_letter.append((pending_task, 1, error))
 
-    dead_letter_state = manager.close()
+    dead_letter_state: DeadLetterState = manager.close()
 
     assert dead_letter_state == [(str(pending_task), 1, error)]
     assert not manager.tasks
