@@ -14,7 +14,8 @@
         "charliermarsh.ruff",
         "tamasfe.even-better-toml",
         "astral-sh.ty",
-        "ms-python.debugpy"
+        "ms-python.debugpy",
+        "ms-vscode.cpptools"
       ]
     }
   }

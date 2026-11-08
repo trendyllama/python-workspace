@@ -1,7 +1,7 @@
 
 FROM docker.io/python:alpine
 
-RUN apk update && apk add bash uv git nodejs npm ripgrep openssh-client github-cli
+RUN apk update && apk add bash uv git nodejs npm ripgrep openssh-client github-cli gcc musl-dev
 
 WORKDIR /app
 
